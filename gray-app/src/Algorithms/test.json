@@ -1,0 +1,24 @@
+[{
+    "status" : true,
+    "name" : "Facial Recognition",
+    "rol" : "Add area",
+    "confidence" : 95
+},
+{
+    "status" : true,
+    "name" : "Loitering Detection",
+    "rol" : "Add area",
+    "confidence" : 95
+},
+{
+    "status" : true,
+    "name" : "People Count",
+    "rol" : "Add area",
+    "confidence" : 95
+},{
+    "status" : true,
+    "name" : "Abandoned Object",
+    "rol" : "Add area",
+    "confidence" : 95
+}
+]

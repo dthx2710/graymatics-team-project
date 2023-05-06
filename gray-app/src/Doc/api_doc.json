@@ -1,0 +1,702 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Graymatics Dashboard - OpenAPI 3.0",
+    "description": "Graymatics Dashboard Application",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "2101372@sit.singaporetech.edu.sg"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Authentication related"
+    },
+    {
+      "name": "users",
+      "description": "Operations about user"
+    },
+    {
+      "name": "cameras",
+      "description": "Operations about cameras"
+    },
+    {
+      "name": "incidents",
+      "description": "Operations about incidents"
+    },
+    {
+      "name": "tickets",
+      "description": "Operations about tickets"
+    },
+    {
+      "name": "videos",
+      "description": "Operations about videos"
+    }
+  ],
+  "paths": {
+    "/auth/signin/credentials": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "requestBody": {
+          "description": "Log in user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logs out current logged in user session",
+        "description": "",
+        "operationId": "logoutUser",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/users/create": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/all": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get all users",
+        "description": "Return json of all users",
+        "operationId": "getUsersAll",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user by user id",
+        "description": "",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use `8be9ca4b-27dc-44a6-937d-467eabe2f7d6` for testing.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id that need to be updated. Use `8be9ca4b-27dc-44a6-937d-467eabe2f7d6` for testing.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update an existing user in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/cameras/cameraslist": {
+      "get": {
+        "tags": [
+          "cameras"
+        ],
+        "summary": "Get all cameras",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getCamerasAll",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Camera"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cameras not found"
+          }
+        }
+      }
+    },
+    "/incidents/IncidentsList": {
+      "get": {
+        "tags": [
+          "incidents"
+        ],
+        "summary": "Get all incidents",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getIncidentsAll",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Incident"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Incidents not found"
+          }
+        }
+      }
+    },
+    "/tickets/{id}": {
+      "get": {
+        "tags": [
+          "tickets"
+        ],
+        "summary": "Get ticket by id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getTicketById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use `1` for testing.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int8"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Ticket not found"
+          }
+        }
+      }
+    },
+    "/tickets/ticketslist": {
+      "get": {
+        "tags": [
+          "tickets"
+        ],
+        "summary": "Get all tickets",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getTicketsAll",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Videos not found"
+          }
+        }
+      }
+    },
+    "/videos/{id}": {
+      "get": {
+        "tags": [
+          "videos"
+        ],
+        "summary": "Get video by Id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getVideoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use `1` for testing.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int8"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Video"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Video not found"
+          }
+        }
+      }
+    },
+    "/videos/VideosList": {
+      "get": {
+        "tags": [
+          "videos"
+        ],
+        "summary": "Get all videos",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "getVideosAll",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Video"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Videos not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "csrfToken": {
+            "type": "string",
+            "example": "910e3492da6d7d6ea4c34783e797e78b18d1fe6ec612c3fdec17a80fbbc373a6"
+          },
+          "username": {
+            "type": "string",
+            "example": "dylan"
+          },
+          "password": {
+            "type": "string",
+            "example": "Test1234"
+          }
+        },
+        "xml": {
+          "name": "Login"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "dylan"
+          },
+          "email": {
+            "type": "string",
+            "example": "dthx2710@hotmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Test1234"
+          },
+          "company": {
+            "type": "string",
+            "example": "Graymatics"
+          },
+          "role": {
+            "type": "string",
+            "example": "Developer"
+          },
+          "country": {
+            "type": "string",
+            "example": "Singapore"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Active Status",
+            "format": "int32",
+            "example": true
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      },
+      "Camera": {
+        "type": "object",
+        "properties": {
+          "cam_id": {
+            "type": "integer",
+            "format": "int8",
+            "example": 1
+          },
+          "cam_name": {
+            "type": "string",
+            "example": "camera_1"
+          },
+          "cam_location": {
+            "type": "string",
+            "example": "location_1"
+          },
+          "rstp_link": {
+            "type": "string",
+            "example": "link_1"
+          },
+          "is_assigned": {
+            "type": "boolean",
+            "example": true
+          },
+          "user_id": {
+            "type": "string",
+            "example": "user_1"
+          },
+          "analytics": {
+            "type": "string",
+            "example": "analytics_1"
+          },
+          "other_id": {
+            "type": "string",
+            "example": "other_id_1"
+          },
+          "src": {
+            "type": "string",
+            "example": "src_1"
+          }
+        },
+        "xml": {
+          "name": "Camera"
+        }
+      },
+      "Incident": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int8",
+            "example": 1
+          },
+          "type": {
+            "type": "string",
+            "example": "Fighting"
+          },
+          "date": {
+            "type": "string",
+            "example": "2022-08-15T00:00:00.000Z"
+          },
+          "time": {
+            "type": "string",
+            "example": "14:00:00"
+          },
+          "camera": {
+            "type": "string",
+            "example": "Video4"
+          },
+          "severity": {
+            "type": "string",
+            "example": "High"
+          }
+        },
+        "xml": {
+          "name": "Incident"
+        }
+      },
+      "Ticket": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int8",
+            "example": 23
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2023-01-25T17:32:43.954Z"
+          },
+          "occurance": {
+            "type": "string",
+            "example": "occurance1"
+          },
+          "status": {
+            "type": "string",
+            "example": "open"
+          },
+          "type_of_alert": {
+            "type": "string",
+            "example": "type1"
+          },
+          "assigned_to": {
+            "type": "string",
+            "example": "sam"
+          },
+          "assigned_by": {
+            "type": "string",
+            "example": "ed"
+          },
+          "severity": {
+            "type": "string",
+            "example": "High"
+          }
+        },
+        "xml": {
+          "name": "Ticket"
+        }
+      },
+      "Video": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int8",
+            "example": 31
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2023-02-08T15:12:37.871Z"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://xqybgvghopxoczhciphb.supabase.co/storage/v1/object/public/videos/b9896b81-b7a3-430b-afe9-cc63e7a1bfff"
+          },
+          "location": {
+            "type": "string",
+            "example": "location1"
+          },
+          "type": {
+            "type": "string",
+            "example": "a"
+          },
+          "name": {
+            "type": "string",
+            "example": "test"
+          },
+          "thumbnail": {
+            "type": "string",
+            "example": "test"
+          },
+          "description": {
+            "type": "string",
+            "example": "test"
+          },
+          "video_uuid": {
+            "type": "string",
+            "example": "b9896b81-b7a3-430b-afe9-cc63e7a1bfff"
+          }
+        },
+        "xml": {
+          "name": "Video"
+        }
+      }
+    },
+    "requestBodies": {
+      "UserArray": {
+        "description": "List of user object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
